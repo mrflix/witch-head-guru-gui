@@ -1,0 +1,195 @@
+<!doctype html>
+<title>Witch Head Guru</title>
+<style>
+  html, body {
+    height: 100%;
+  }
+
+  body {
+    margin: 0 10px;
+    font-family: sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #222;
+  }
+
+  header {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 25px;
+  }
+
+  header svg {
+    height: 100px;
+    margin: -50px -10px 0 -10px;
+  }
+
+  h1 {
+    font-weight: 200;
+    font-size: 36px;
+    white-space: nowrap;
+    margin: 0;
+  }
+
+  h2 {
+    font-weight: 200;
+    margin: 12px 0 20px;
+  }
+
+  ul {
+    margin: 12px 0;
+    padding: 0;
+    list-style-position: inside;
+  }
+
+  li {
+    line-height: 1.4;
+  }
+
+  a {
+    color: hsl(212,73%,59%);
+  }
+
+  main {
+    width: 100%;
+    max-width: 500px;
+    position: relative;
+    margin-bottom: 25px;
+  }
+
+  input {
+    width: 100%;
+    max-width: 600px;
+    font: inherit;
+    border: 1px solid #ccc;
+    padding: 12px;
+    outline: none;
+    border-right: none;
+  }
+
+  input:focus {
+    border-color: hsl(212,73%,59%);
+  }
+
+  button {
+    color: white;
+    font: inherit;
+    border: none;
+    background: hsl(212,73%,59%);
+    width: 120px;
+    padding: 0 12px;
+  }
+
+  form {
+    display: flex;
+  }
+
+  form.is-searching + .loader {
+    display: flex;
+  }
+
+  .loader {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 80px;
+    display: none;
+    justify-content: center;
+  }
+
+  .ball {
+    margin: 0 2px;
+    width: 8px;
+    height: 8px;
+    border-radius: 100%;
+    background: hsl(213,70%,60%);
+    animation: ease-in-out load 667ms infinite alternate;
+  }
+
+  .ball + .ball {
+    animation-delay: .2s;
+  }
+
+  .ball + .ball + .ball {
+    animation-delay: .4s;
+  }
+
+  @keyframes load {
+    from { opacity: .5; transform: scale(0.6); }
+    67% { opacity: 1; transform: scale(1); }
+  }
+
+  .answer {
+    height: 44px;
+    margin-top: 25px;
+  }
+
+  .answer:not(:empty) {
+    height: auto;
+    padding: 12px;
+    background: hsl(0,0%,97%);
+    border: 1px solid #ccc;
+  }
+
+  .box {
+    margin-top: 25px;
+    border: 1px solid #ccc;
+    padding: 12px 24px;
+  }
+</style>
+
+<header>
+  <svg viewBox="0 0 548 599" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><path d="m173.5 186.5l178.5 77-53 257.5-209.5 77-89-137.5 50.5-160 122.5-114m68 318l-137 40.5-60.5-84.5 24.5-96.5 57 76 136.5-15.5-20.5 80" fill="#4990e2"/><g fill="#b8e986"><path d="m155.25 284.5h-43.25l-20.75 26 36.5 10 43-10-15.5-26"/><path d="m228.5 302.5l52 11.5 3 36h-35l-35-15.5 15-32"/></g><g fill="#50e3c2"><path d="m192.75 359.41h-56.5l62.5 33-6-33" transform="matrix(.37461-.92718.92718.37461-243.78 390.39)"/><path d="m167 237.5l-155-144 201.5 124-46.5 20"/><path d="m167 238l46-238 38.5 254.5-84.5-16.5"/><path d="m211.5 225.5l218-184.5-150.5 213.5-67.5-29"/><path d="m278.5 208.5l11-191-68.5 216 57.5-25"/><path d="m277.5 223.5l270.5-72-261 129.5-9.5-57.5"/><path d="m336 241.5l136.5 20-167.5 20 31-40"/><path d="m221 255.5l84 29 161-172-245 143"/><path d="m151.5 42l86 219-64-10-22-209"/><path d="m69.5 215.5l109-2v41l-109-39"/></g></g></svg>
+  <h1>Witch Head Guru</h1>
+</header>
+<main>
+  <form>
+    <input autofocus>
+    <button>Search</button>
+  </form>
+  <div class="loader">
+    <div class="ball"></div>
+    <div class="ball"></div>
+    <div class="ball"></div>
+  </div>
+  <div class="answer"></div>
+  <div class="examples box">
+    <h2>Example Questions</h2>
+    <ul>
+      <li><a href="#">How tall is the Eiffel Tower?</a>
+      <li><a href="#">How old is Mr. Jesse Pinkman?</a>
+      <li><a href="#">How long is the Brooklyn Bridge?</a>
+      <li><a href="#">What's the homepage of Landshut?</a>
+    </ul>
+  </div>
+</main>
+
+<script src="https://rawgit.com/spencermountain/nlp_compromise/master/client_side/nlp.min.js"></script>
+<script src="https://rawgit.com/jakearchibald/es6-promise/master/dist/es6-promise.min.js"></script>
+<script src="https://rawgit.com/iriscouch/browser-request/master/index.js"></script>
+<script src="https://rawgit.com/bendc/sprint/master/sprint.min.js"></script>
+<script src="guru.js"></script>
+<script>
+  $('form:not(.is-searching)').on('submit', ask)
+
+  $('.examples a').on('click', function(event){
+    $('input').val($(this).text())
+    ask(event)
+  })
+
+  function ask(event) {
+    $('.answer').html('')
+    $('form').addClass('is-searching')
+
+    guru.ask( $('input').val() )
+      .then(function(answer){
+        $('form').removeClass('is-searching')
+        $('.answer').text(answer)
+      })
+      .catch(function (error) {
+        console.error(error)
+      })
+  }
+</script>
